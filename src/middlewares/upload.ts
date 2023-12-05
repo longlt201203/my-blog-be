@@ -16,7 +16,7 @@ const storage = diskStorage({
         while (fs.existsSync(`${uploadDir}/${filename} (${i})${ext ? `.${ext}` : ""}`)) {
             i++;
         }
-        cb(null, `${uploadDir}/${filename} (${i})${ext ? `.${ext}` : ""}`);
+        cb(null, `${filename} (${i})${ext ? `.${ext}` : ""}`);
     }
 });
 

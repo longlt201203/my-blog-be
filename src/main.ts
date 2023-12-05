@@ -2,8 +2,11 @@ import express, { json, urlencoded } from "express";
 import router from "./router";
 import Env from "./env";
 import mongoose from "mongoose";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors());
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
