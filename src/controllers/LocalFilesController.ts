@@ -24,7 +24,6 @@ LocalFilesController.get("/file/:id", createRequestHandler(async (req, res) => {
     let { id } = req.params;
     const localFile = await LocalFilesService.getFileInfo(id);
     if (localFile) {
-        console.log(path.join(__dirname, "../..", localFile.filePath));
         res.status(200).sendFile(path.join(__dirname, "../..", localFile.filePath));
     } else {
         res.status(404).send(MessageError.fileNotFoundError(id));
