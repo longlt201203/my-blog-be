@@ -2,7 +2,7 @@ import { Router } from "express";
 import upload from "../middlewares/upload";
 import LocalFilesService from "../services/LocalFilesService";
 import * as path from "path";
-import { validateBody, validateParams } from "../middlewares/validate";
+import { validateBody, validateParams, validateQuery } from "../middlewares/validate";
 import { LocalFilesFilterDto, UpdateLocalFileDto } from "../entities/LocalFile";
 import { createRequestHandler } from "../middlewares/handler";
 import * as fs from "fs";
@@ -30,7 +30,7 @@ LocalFilesController.get("/file/:id", createRequestHandler(async (req, res) => {
     }
 }));
 
-LocalFilesController.get("/", validateParams(LocalFilesFilterDto), createRequestHandler(async (req, res) => {
+LocalFilesController.get("/", validateQuery(LocalFilesFilterDto), createRequestHandler(async (req, res) => {
     const listFiles = await LocalFilesService.getListFiles(req.params);
     res.status(200).send(listFiles);
 }));

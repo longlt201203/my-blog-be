@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express, { json, urlencoded } from "express";
 import router from "./router";
 import Env from "./env";

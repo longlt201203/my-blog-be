@@ -33,3 +33,18 @@ export const validateParams = <T>(clazz: ClassConstructor<T>) => {
         }
     })
 }
+
+export const validateQuery = <T>(clazz: ClassConstructor<T>) => {
+    return createRequestHandler(async (req: Request<T>, res, next) => {
+        req.params = plainToClass(clazz, req.query);
+        const errors = await validate(req.params as object);
+        if (errors.length > 0) {
+            res.status(400).send({
+                message: "Validation error",
+                errors: errors
+            });
+        } else {
+            if (next) next();
+        }
+    })
+}
