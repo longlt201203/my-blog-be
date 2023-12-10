@@ -1,7 +1,7 @@
 import { ClassConstructor } from "class-transformer"
 import { validate } from "class-validator";
 import { plainToClass } from "class-transformer";
-import { NextFunction, Request } from "express"
+import { Request } from "express"
 import { createRequestHandler } from "./handler";
 
 export const validateBody = <T>(clazz: ClassConstructor<T>) => {

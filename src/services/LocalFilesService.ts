@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
-import { LocalFileModel, LocalFilesFilterDto, UpdateLocalFileDto } from "../entities/LocalFile";
+import { LocalFileModel, LocalFilesFilterDto, Localfile, UpdateLocalFileDto } from "../entities/LocalFile";
 import ServiceError from "../errors/ServiceError";
+import GetManyResponseDto from "../utils/GetManyResponseDto";
 
 export default class LocalFilesService {
     public static async uploadFiles(files: Express.Multer.File[]) {
@@ -16,7 +17,7 @@ export default class LocalFilesService {
         return await LocalFileModel.insertMany(localFiles);
     }
 
-    public static async getListFiles(filter: LocalFilesFilterDto) {
+    public static async getListFiles(filter: LocalFilesFilterDto): Promise<GetManyResponseDto<Localfile>> {
         const page = filter.page ?? 1;
         const perPage = filter.perPage ?? 20;
         
@@ -26,10 +27,18 @@ export default class LocalFilesService {
                             .skip((page-1)*perPage)
                             .exec();
 
-        return localFiles.map(item => ({
-            ...item.toObject(),
-            link: `http://localhost:3000/local-files/file/${item._id.toString()}`
-        }));
+        const count = await LocalFileModel.countDocuments({});
+
+        return {
+            page: page,
+            perPage: perPage,
+            nextPage: page*perPage < count ? page+1 : undefined,
+            prevPage: page-1 > 0 ? page-1 : undefined,
+            data: localFiles.map(item => ({
+                ...item.toObject(),
+                link: `http://localhost:3000/local-files/file/${item._id.toString()}`
+            }))
+        };
     }
 
     public static async getFileInfo(id: string) {
@@ -38,7 +47,7 @@ export default class LocalFilesService {
             return localFile;
         } catch (err) {
             const serviceError = new ServiceError();
-            serviceError.action = `LocalFilesService.uploadFiles`;
+            serviceError.action = `LocalFilesService.getFileInfo`;
             serviceError.error = err;
             throw serviceError;
         }
@@ -64,7 +73,7 @@ export default class LocalFilesService {
             return localFile;
         } catch (err) {
             const serviceError = new ServiceError();
-            serviceError.action = `LocalFilesService.updateFileInfo`;
+            serviceError.action = `LocalFilesService.deleteFile`;
             serviceError.error = err;
             throw serviceError;
         }

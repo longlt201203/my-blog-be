@@ -19,6 +19,7 @@ mongoose.connect(Env.CONNECTION_STRING).then(mg => {
         console.log(`App is listening at ${Env.LISTEN_PORT}`);
     });
 }).catch(err => {
+    console.log(Env.CONNECTION_STRING);
     console.error("Failed to connect to database");
     console.error(err);
 });

@@ -11,4 +11,10 @@ export default class MessageError {
         error.id = id;
         return error;
     }
+
+    public static tagNotFoundError(id: string) {
+        const error = new MessageError("Tag not found");
+        error.id = id;
+        return error;
+    }
 }

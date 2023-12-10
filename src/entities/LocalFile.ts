@@ -3,7 +3,7 @@ import mongoose, { Schema, SchemaType, Types } from "mongoose";
 import FilterDto from "../utils/FilterDto";
 
 export interface Localfile {
-    _id: Types.ObjectId,
+    _id: Types.ObjectId;
     filePath: string;
     aliasName: string;
 }
