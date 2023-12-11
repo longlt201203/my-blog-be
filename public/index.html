@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Credential Page</title>
+</head>
+
+<body>
+    <!-- Client ID here -->
+    <div id="g_id_onload" data-client_id=""
+        data-context="signin" data-ux_mode="popup" data-callback="testLogin" data-itp_support="true">
+    </div>
+
+    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_blue"
+        data-text="signin_with" data-size="large" data-logo_alignment="left">
+    </div>
+
+    <h1>Credential</h1>
+    <textarea id="credentialDisplayer" cols="100" rows="30"></textarea>
+
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script>
+        function testLogin(data) {
+            document.getElementById("credentialDisplayer").value = data.credential;
+        }
+    </script>
+</body>
+
+</html>

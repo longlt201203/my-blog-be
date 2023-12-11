@@ -4,6 +4,7 @@ import { CreateTagDto, TagFilterDto, UpdateTagDto } from "../entities/Tag";
 import TagsService from "../services/TagsService";
 import { createRequestHandler } from "../middlewares/handler";
 import MessageError from "../errors/MessageError";
+import authenticated from "../middlewares/auth";
 
 const TagsController = Router();
 
@@ -13,7 +14,7 @@ TagsController.post("/", validateBody(CreateTagDto), createRequestHandler(async 
     res.status(200).send(tag);
 }));
 
-TagsController.get("/", validateParams(TagFilterDto), createRequestHandler(async (req, res) => {
+TagsController.get("/", authenticated(), validateParams(TagFilterDto), createRequestHandler(async (req, res) => {
     const listTags = await TagsService.getTags(req.params);
     res.status(200).send(listTags);
 }));

@@ -11,6 +11,7 @@ app.use(cors());
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use("/public", express.static(__dirname + "/../public"));
 
 app.use(router);
 

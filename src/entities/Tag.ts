@@ -5,7 +5,7 @@ import FilterDto from "../utils/FilterDto";
 export interface Tag {
     _id: Types.ObjectId;
     name: string;
-    description: string;
+    description?: string;
 }
 
 const TagSchema = new Schema<Tag>({
