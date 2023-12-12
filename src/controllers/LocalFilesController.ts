@@ -11,7 +11,7 @@ import authenticated from "../middlewares/auth";
 
 const LocalFilesController = Router();
 
-LocalFilesController.get("/:id", authenticated(), createRequestHandler(async (req, res) => {
+LocalFilesController.get("/:id", createRequestHandler(async (req, res) => {
     let { id } = req.params;
     const localFile = await LocalFilesService.getFileInfo(id);
     if (localFile) {
@@ -31,7 +31,7 @@ LocalFilesController.get("/file/:id", createRequestHandler(async (req, res) => {
     }
 }));
 
-LocalFilesController.get("/", authenticated(), validateQuery(LocalFilesFilterDto), createRequestHandler(async (req, res) => {
+LocalFilesController.get("/", validateQuery(LocalFilesFilterDto), createRequestHandler(async (req, res) => {
     const listFiles = await LocalFilesService.getListFiles(req.params);
     res.status(200).send(listFiles);
 }));
