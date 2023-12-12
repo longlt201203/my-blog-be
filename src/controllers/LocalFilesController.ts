@@ -7,10 +7,11 @@ import { LocalFilesFilterDto, UpdateLocalFileDto } from "../entities/LocalFile";
 import { createRequestHandler } from "../middlewares/handler";
 import * as fs from "fs";
 import MessageError from "../errors/MessageError";
+import authenticated from "../middlewares/auth";
 
 const LocalFilesController = Router();
 
-LocalFilesController.get("/:id", createRequestHandler(async (req, res) => {
+LocalFilesController.get("/:id", authenticated(), createRequestHandler(async (req, res) => {
     let { id } = req.params;
     const localFile = await LocalFilesService.getFileInfo(id);
     if (localFile) {
@@ -30,17 +31,17 @@ LocalFilesController.get("/file/:id", createRequestHandler(async (req, res) => {
     }
 }));
 
-LocalFilesController.get("/", validateQuery(LocalFilesFilterDto), createRequestHandler(async (req, res) => {
+LocalFilesController.get("/", authenticated(), validateQuery(LocalFilesFilterDto), createRequestHandler(async (req, res) => {
     const listFiles = await LocalFilesService.getListFiles(req.params);
     res.status(200).send(listFiles);
 }));
 
-LocalFilesController.post("/", upload.array("files"), createRequestHandler(async (req, res) => {
+LocalFilesController.post("/", authenticated(), upload.array("files"), createRequestHandler(async (req, res) => {
     const localFiles = await LocalFilesService.uploadFiles(Object.values(req.files ?? []));
     res.status(200).send(localFiles);
 }));
 
-LocalFilesController.patch("/:id", validateBody(UpdateLocalFileDto), createRequestHandler(async (req, res) => {
+LocalFilesController.patch("/:id", authenticated(), validateBody(UpdateLocalFileDto), createRequestHandler(async (req, res) => {
     const { id } = req.params;
     const localFile = await LocalFilesService.updateFileInfo(id, req.body as UpdateLocalFileDto);
     if (localFile) {
@@ -50,7 +51,7 @@ LocalFilesController.patch("/:id", validateBody(UpdateLocalFileDto), createReque
     }
 }));
 
-LocalFilesController.delete("/:id", createRequestHandler(async (req, res) => {
+LocalFilesController.delete("/:id", authenticated(), createRequestHandler(async (req, res) => {
         const { id } = req.params;
         const localFile = await LocalFilesService.deleteFile(id);
         if (localFile.value && fs.existsSync(localFile.value.filePath)) {

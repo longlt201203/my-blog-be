@@ -5,16 +5,16 @@ import ServiceError from "../errors/ServiceError";
 import AccountsService from "./AccountsService";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import { OAuth2Client } from "google-auth-library";
+import CryptoService from "./CryptoService";
 
 export default class AuthService {
     public static signJwtToken(account: Account) {
-        console.log(Env.JWT_SECRET);
         const signData = {}
         const token = jwt.sign(signData, Env.JWT_SECRET, {
             algorithm: "HS256",
             subject: account._id.toString(),
             issuer: "Long Dep Trai Chu Con Ai Vao Day Nua",
-            expiresIn: "1d"
+            expiresIn: "999d"
         });
         return token;
     }
@@ -54,7 +54,7 @@ export default class AuthService {
             const payload = ticket.getPayload();
             if (payload && payload.email) {
                 const email = payload.email;
-                const account = await AccountsService.getAccountByEmail(email);
+                const account = await AccountsService.getAccountByInfo(email);
                 if (account) {
                     const token = this.signJwtToken(account);
                     return { accessToken: token };
@@ -73,6 +73,16 @@ export default class AuthService {
                 serviceError.error = err;
                 throw serviceError;
             }
+        }
+    }
+
+    public static async loginWithInfoAndPassword(info: string, password: string) {
+        const account = await AccountsService.getAccountByInfo(info);
+        if (account && await CryptoService.checkPassword(password, account.password)) {
+            const token = this.signJwtToken(account);
+            return { accessToken: token };
+        } else {
+            throw new UnauthorizedError("Wrong info or password!");
         }
     }
 }

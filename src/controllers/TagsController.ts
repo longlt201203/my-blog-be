@@ -8,7 +8,7 @@ import authenticated from "../middlewares/auth";
 
 const TagsController = Router();
 
-TagsController.post("/", validateBody(CreateTagDto), createRequestHandler(async (req, res) => {
+TagsController.post("/", authenticated(), validateBody(CreateTagDto), createRequestHandler(async (req, res) => {
     const dto = req.body as CreateTagDto;
     const tag = await TagsService.createTag(dto);
     res.status(200).send(tag);
@@ -19,7 +19,7 @@ TagsController.get("/", authenticated(), validateParams(TagFilterDto), createReq
     res.status(200).send(listTags);
 }));
 
-TagsController.get("/:id", createRequestHandler(async (req, res) => {
+TagsController.get("/:id", authenticated(), createRequestHandler(async (req, res) => {
     const { id } = req.params;
     const tag = await TagsService.getTag(id);
     if (tag) {
@@ -29,7 +29,7 @@ TagsController.get("/:id", createRequestHandler(async (req, res) => {
     }
 }));
 
-TagsController.patch("/:id", validateBody(UpdateTagDto), createRequestHandler(async (req, res) => {
+TagsController.patch("/:id", authenticated(), validateBody(UpdateTagDto), createRequestHandler(async (req, res) => {
     const { id } = req.params;
     const dto = req.body as UpdateTagDto;
     const tag = await TagsService.updateTag(id, dto);
@@ -40,7 +40,7 @@ TagsController.patch("/:id", validateBody(UpdateTagDto), createRequestHandler(as
     }
 }));
 
-TagsController.delete("/:id", createRequestHandler(async (req, res) => {
+TagsController.delete("/:id", authenticated(), createRequestHandler(async (req, res) => {
     const { id } = req.params;
     const tag = await TagsService.deleteTag(id);
     if (tag) {
